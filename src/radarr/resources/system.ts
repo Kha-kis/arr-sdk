@@ -76,8 +76,8 @@ export class BackupResource {
     return this.client.post(`/api/v3/system/backup/restore/${id}`)
   }
 
-  async restoreUpload(file: unknown): Promise<void> {
-    return this.client.post('/api/v3/system/backup/restore/upload', file)
+  async restoreUpload(formData: FormData): Promise<void> {
+    return this.client.postForm('/api/v3/system/backup/restore/upload', formData)
   }
 }
 

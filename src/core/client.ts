@@ -191,6 +191,75 @@ export abstract class BaseClient implements ClientMethods {
     return this.request<T>('POST', path, { body, params })
   }
 
+  async postForm<T>(path: string, formData: FormData, params?: Record<string, unknown>): Promise<T> {
+    const url = new URL(joinPath(this.config.baseUrl, path))
+
+    if (params) {
+      const queryParams = buildQueryParams(params)
+      queryParams.forEach((value, key) => {
+        url.searchParams.append(key, value)
+      })
+    }
+
+    // Don't set Content-Type - let fetch set it with the multipart boundary
+    const headers: Record<string, string> = {
+      'X-Api-Key': this.config.apiKey,
+      Accept: 'application/json',
+      ...this.config.headers
+    }
+
+    const requestConfig: RequestConfig = {
+      url,
+      method: 'POST',
+      headers,
+      body: undefined // FormData is passed directly to fetch, not serialized
+    }
+
+    await this.config.onRequest?.(requestConfig)
+
+    let response: Response
+
+    try {
+      response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+        signal: AbortSignal.timeout(this.config.timeout)
+      })
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+          const timeoutError = new TimeoutError(`Request timed out after ${this.config.timeout}ms`)
+          await this.config.onError?.(timeoutError)
+          throw timeoutError
+        }
+        const networkError = new NetworkError(error.message, error)
+        await this.config.onError?.(networkError)
+        throw networkError
+      }
+      throw error
+    }
+
+    await this.config.onResponse?.(response)
+
+    if (!response.ok) {
+      const error = await this.parseError(response)
+      await this.config.onError?.(error)
+      throw error
+    }
+
+    if (response.status === 204 || response.headers.get('content-length') === '0') {
+      return undefined as T
+    }
+
+    const contentType = response.headers.get('content-type')
+    if (contentType?.includes('application/json')) {
+      return response.json() as Promise<T>
+    }
+
+    return undefined as T
+  }
+
   put<T>(path: string, body?: unknown, params?: Record<string, unknown>): Promise<T> {
     return this.request<T>('PUT', path, { body, params })
   }
