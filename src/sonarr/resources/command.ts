@@ -36,7 +36,7 @@ export type SonarrCommand =
   | { name: 'SeasonSearch'; seriesId: number; seasonNumber: number }
   | { name: 'SeriesSearch'; seriesId: number }
   | { name: 'UpdateAll' }
-  | { name: 'ManualImport'; files: SonarrManualImportFile[]; importMode?: 'auto' | 'move' | 'copy' }
+  | { name: 'ManualImport'; files: SonarrManualImportFile[]; importMode?: 'Auto' | 'Move' | 'Copy' }
 
 export class CommandResource_ {
   constructor(private client: ClientMethods) {}
@@ -110,7 +110,7 @@ export class CommandResource_ {
     return this.execute({ name: 'MoveSeries', seriesIds, destinationRootFolder })
   }
 
-  async manualImport(files: SonarrManualImportFile[], importMode?: 'auto' | 'move' | 'copy'): Promise<CommandResource> {
+  async manualImport(files: SonarrManualImportFile[], importMode?: 'Auto' | 'Move' | 'Copy'): Promise<CommandResource> {
     return this.execute({ name: 'ManualImport', files, importMode })
   }
 }
