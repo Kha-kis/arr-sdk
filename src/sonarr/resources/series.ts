@@ -50,4 +50,8 @@ export class SeriesResource {
       ...options
     })
   }
+
+  async getFolder(id: number): Promise<string> {
+    return this.client.get(`/api/v3/series/${id}/folder`)
+  }
 }

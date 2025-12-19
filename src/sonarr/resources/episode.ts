@@ -6,6 +6,8 @@ export interface GetEpisodesOptions {
   seasonNumber?: number
   episodeIds?: number[]
   episodeFileId?: number
+  includeSeries?: boolean
+  includeEpisodeFile?: boolean
   includeImages?: boolean
   [key: string]: unknown
 }

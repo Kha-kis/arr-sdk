@@ -1,5 +1,20 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { CommandResource } from '../types.js'
+import type { CommandResource, QualityModel, Language } from '../types.js'
+
+/**
+ * File entry for the ManualImport command
+ */
+export interface RadarrManualImportFile {
+  path: string
+  folderName?: string
+  downloadId?: string
+  quality?: QualityModel
+  languages?: Language[]
+  releaseGroup?: string
+  indexerFlags?: number
+  movieId?: number
+  movieFileId?: number
+}
 
 export type RadarrCommand =
   | { name: 'ApplicationCheckUpdate' }
@@ -18,6 +33,7 @@ export type RadarrCommand =
   | { name: 'RenameMovie'; movieIds: number[] }
   | { name: 'Rescan'; movieId?: number }
   | { name: 'RssSync' }
+  | { name: 'ManualImport'; files: RadarrManualImportFile[]; importMode?: 'Move' | 'Copy' }
 
 export class CommandResource_ {
   constructor(private client: ClientMethods) {}
@@ -81,5 +97,9 @@ export class CommandResource_ {
 
   async refreshCollections(): Promise<CommandResource> {
     return this.execute({ name: 'RefreshCollections' })
+  }
+
+  async manualImport(files: RadarrManualImportFile[], importMode?: 'Move' | 'Copy'): Promise<CommandResource> {
+    return this.execute({ name: 'ManualImport', files, importMode })
   }
 }

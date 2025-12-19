@@ -1,5 +1,22 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { CommandResource } from '../types.js'
+import type { CommandResource, QualityModel, Language, ReleaseType } from '../types.js'
+
+/**
+ * File entry for the ManualImport command
+ */
+export interface SonarrManualImportFile {
+  path: string
+  folderName?: string
+  downloadId?: string
+  quality?: QualityModel
+  languages?: Language[]
+  releaseGroup?: string
+  indexerFlags?: number
+  seriesId?: number
+  episodeIds?: number[]
+  seasonNumber?: number
+  releaseType?: ReleaseType
+}
 
 export type SonarrCommand =
   | { name: 'ApplicationCheckUpdate' }
@@ -19,6 +36,7 @@ export type SonarrCommand =
   | { name: 'SeasonSearch'; seriesId: number; seasonNumber: number }
   | { name: 'SeriesSearch'; seriesId: number }
   | { name: 'UpdateAll' }
+  | { name: 'ManualImport'; files: SonarrManualImportFile[]; importMode?: 'Auto' | 'Move' | 'Copy' }
 
 export class CommandResource_ {
   constructor(private client: ClientMethods) {}
@@ -90,5 +108,9 @@ export class CommandResource_ {
 
   async moveSeries(seriesIds: number[], destinationRootFolder: string): Promise<CommandResource> {
     return this.execute({ name: 'MoveSeries', seriesIds, destinationRootFolder })
+  }
+
+  async manualImport(files: SonarrManualImportFile[], importMode?: 'Auto' | 'Move' | 'Copy'): Promise<CommandResource> {
+    return this.execute({ name: 'ManualImport', files, importMode })
   }
 }

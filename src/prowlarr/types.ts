@@ -63,6 +63,9 @@ export type DevelopmentConfig = components['schemas']['DevelopmentConfigResource
 // Custom Filter
 export type CustomFilter = components['schemas']['CustomFilterResource']
 
+// Localization
+export type LocalizationOption = components['schemas']['LocalizationOption']
+
 // API Info
 export type ApiInfo = components['schemas']['ApiInfoResource']
 

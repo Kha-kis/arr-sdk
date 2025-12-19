@@ -1,6 +1,7 @@
 import type { ClientMethods } from '../../core/resource.js'
 import type { SystemResource, Health, Task, Backup, Log, LogFile, Update } from '../types.js'
 import type { PaginationOptions, PaginatedResponse } from '../../core/types.js'
+import { validateFilename } from '../../core/utils.js'
 
 export class SystemInfoResource {
   constructor(private client: ClientMethods) {}
@@ -13,12 +14,23 @@ export class SystemInfoResource {
     return this.client.get('/api/v1/system/routes')
   }
 
+  async getDuplicateRoutes(): Promise<unknown[]> {
+    return this.client.get('/api/v1/system/routes/duplicate')
+  }
+
   async restart(): Promise<void> {
     return this.client.post('/api/v1/system/restart')
   }
 
   async shutdown(): Promise<void> {
     return this.client.post('/api/v1/system/shutdown')
+  }
+
+  /**
+   * Simple health check - returns "Pong"
+   */
+  async ping(): Promise<string> {
+    return this.client.get('/ping')
   }
 }
 
@@ -54,7 +66,11 @@ export class BackupResource {
   }
 
   async restore(id: number): Promise<void> {
-    return this.client.post('/api/v1/system/backup/restore/upload', undefined, { id })
+    return this.client.post(`/api/v1/system/backup/restore/${id}`)
+  }
+
+  async restoreUpload(formData: FormData): Promise<void> {
+    return this.client.postForm('/api/v1/system/backup/restore/upload', formData)
   }
 }
 
@@ -83,6 +99,24 @@ export class LogFileResource {
 
   async getUpdate(): Promise<LogFile[]> {
     return this.client.get('/api/v1/log/file/update')
+  }
+
+  /**
+   * Download a specific log file's contents
+   */
+  async download(filename: string): Promise<string> {
+    validateFilename(filename)
+    const sanitized = encodeURIComponent(filename)
+    return this.client.getText(`/api/v1/log/file/${sanitized}`)
+  }
+
+  /**
+   * Download a specific update log file's contents
+   */
+  async downloadUpdate(filename: string): Promise<string> {
+    validateFilename(filename)
+    const sanitized = encodeURIComponent(filename)
+    return this.client.getText(`/api/v1/log/file/update/${sanitized}`)
   }
 }
 

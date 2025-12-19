@@ -8,7 +8,14 @@ export interface GetQueueOptions extends PaginationOptions {
   movieIds?: number[]
   protocol?: 'unknown' | 'usenet' | 'torrent'
   languages?: number[]
-  quality?: number
+  quality?: number[]
+  status?: ('unknown' | 'queued' | 'paused' | 'downloading' | 'completed' | 'failed' | 'warning' | 'delay' | 'downloadClientUnavailable' | 'fallback')[]
+}
+
+export interface GetQueueDetailsOptions {
+  movieId?: number
+  includeMovie?: boolean
+  [key: string]: unknown
 }
 
 export interface DeleteQueueOptions {
@@ -48,6 +55,10 @@ export class QueueResource {
 
   async getStatus(): Promise<QueueStatus> {
     return this.client.get('/api/v3/queue/status')
+  }
+
+  async getDetails(options?: GetQueueDetailsOptions): Promise<Queue[]> {
+    return this.client.get('/api/v3/queue/details', options)
   }
 
   async grab(id: number): Promise<void> {

@@ -45,11 +45,32 @@ export class IndexerResource {
   }
 }
 
+export interface GetIndexerStatsOptions {
+  startDate?: Date | string
+  endDate?: Date | string
+  indexers?: number[]
+  protocols?: number[]
+  tags?: number[]
+  [key: string]: unknown
+}
+
 export class IndexerStatsResource {
   constructor(private client: ClientMethods) {}
 
-  async get(): Promise<IndexerStats> {
-    return this.client.get('/api/v1/indexerstats')
+  async get(options?: GetIndexerStatsOptions): Promise<IndexerStats> {
+    if (!options) {
+      return this.client.get('/api/v1/indexerstats')
+    }
+
+    const params: Record<string, unknown> = { ...options }
+    if (options.startDate instanceof Date) {
+      params.startDate = options.startDate.toISOString()
+    }
+    if (options.endDate instanceof Date) {
+      params.endDate = options.endDate.toISOString()
+    }
+
+    return this.client.get('/api/v1/indexerstats', params)
   }
 }
 
