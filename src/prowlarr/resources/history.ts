@@ -5,6 +5,7 @@ import type { History, HistoryEventType } from '../types.js'
 export interface GetHistoryOptions extends PaginationOptions {
   eventType?: HistoryEventType | HistoryEventType[]
   indexerId?: number
+  indexerIds?: number[]
   downloadId?: string
   successful?: boolean
 }
