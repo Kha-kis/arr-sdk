@@ -104,14 +104,16 @@ export class LogFileResource {
    * Download a specific log file's contents
    */
   async download(filename: string): Promise<string> {
-    return this.client.get(`/api/v1/log/file/${filename}`)
+    const sanitized = encodeURIComponent(filename)
+    return this.client.getText(`/api/v1/log/file/${sanitized}`)
   }
 
   /**
    * Download a specific update log file's contents
    */
   async downloadUpdate(filename: string): Promise<string> {
-    return this.client.get(`/api/v1/log/file/update/${filename}`)
+    const sanitized = encodeURIComponent(filename)
+    return this.client.getText(`/api/v1/log/file/update/${sanitized}`)
   }
 }
 
