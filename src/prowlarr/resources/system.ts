@@ -1,6 +1,7 @@
 import type { ClientMethods } from '../../core/resource.js'
 import type { SystemResource, Health, Task, Backup, Log, LogFile, Update } from '../types.js'
 import type { PaginationOptions, PaginatedResponse } from '../../core/types.js'
+import { validateFilename } from '../../core/utils.js'
 
 export class SystemInfoResource {
   constructor(private client: ClientMethods) {}
@@ -86,21 +87,6 @@ export class LogResource {
 
   async getAllArray(options?: Omit<PaginationOptions, 'page'>): Promise<Log[]> {
     return this.client.paginateAll<Log>('/api/v1/log', options)
-  }
-}
-
-function validateFilename(filename: string): void {
-  if (!filename || typeof filename !== 'string') {
-    throw new Error('Invalid filename: filename must be a non-empty string')
-  }
-  if (filename.includes('/') || filename.includes('\\')) {
-    throw new Error('Invalid filename: path separators are not allowed')
-  }
-  if (filename.includes('..')) {
-    throw new Error('Invalid filename: parent directory references are not allowed')
-  }
-  if (/^[a-zA-Z]:/.test(filename)) {
-    throw new Error('Invalid filename: absolute paths are not allowed')
   }
 }
 
