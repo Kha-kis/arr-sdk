@@ -121,6 +121,7 @@ export type {
   LocalizationLanguage,
   // Media
   MediaCover,
+  MediaCoverTypes,
   MediaInfo,
   // Ratings
   Ratings,

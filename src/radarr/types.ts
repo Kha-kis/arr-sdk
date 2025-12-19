@@ -137,6 +137,7 @@ export type LocalizationLanguage = components['schemas']['LocalizationLanguageRe
 
 // Media
 export type MediaCover = components['schemas']['MediaCover']
+export type MediaCoverTypes = components['schemas']['MediaCoverTypes']
 export type MediaInfo = components['schemas']['MediaInfoResource']
 
 // Ratings

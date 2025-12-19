@@ -7,6 +7,7 @@ export interface ClientMethods {
   delete<T>(path: string, body?: unknown, params?: Record<string, unknown>): Promise<T>
   paginate<T>(path: string, options?: PaginationOptions & Record<string, unknown>): AsyncGenerator<T, void, undefined>
   paginateAll<T>(path: string, options?: PaginationOptions & Record<string, unknown>): Promise<T[]>
+  getBuffer(path: string, params?: Record<string, unknown>): Promise<ArrayBuffer>
 }
 
 export abstract class BaseResource {
