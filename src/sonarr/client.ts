@@ -28,6 +28,7 @@ import { LocalizationResource } from './resources/localization.js'
 import { CustomFilterResource } from './resources/customFilter.js'
 import { SeasonPassResource } from './resources/seasonPass.js'
 import { WantedResource } from './resources/wanted.js'
+import { FileSystemResource } from './resources/filesystem.js'
 
 export class SonarrClient extends BaseClient {
   public readonly series: SeriesResource
@@ -80,6 +81,7 @@ export class SonarrClient extends BaseClient {
   public readonly customFilter: CustomFilterResource
   public readonly seasonPass: SeasonPassResource
   public readonly wanted: WantedResource
+  public readonly filesystem: FileSystemResource
 
   constructor(config: ClientConfig) {
     super(config)
@@ -134,5 +136,6 @@ export class SonarrClient extends BaseClient {
     this.customFilter = new CustomFilterResource(this)
     this.seasonPass = new SeasonPassResource(this)
     this.wanted = new WantedResource(this)
+    this.filesystem = new FileSystemResource(this)
   }
 }

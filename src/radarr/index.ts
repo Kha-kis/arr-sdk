@@ -19,6 +19,7 @@ export type {
   QualityProfile,
   QualityProfileQualityItem,
   QualityDefinition,
+  QualityDefinitionLimits,
   Quality,
   QualityModel,
   // Custom Format
@@ -142,9 +143,10 @@ export type { GetWantedOptions } from './resources/wanted.js'
 
 // Re-export option types
 export type { GetMovieOptions, DeleteMovieOptions } from './resources/movie.js'
-export type { CalendarOptions } from './resources/calendar.js'
-export type { GetQueueOptions, DeleteQueueOptions } from './resources/queue.js'
+export type { CalendarOptions, CalendarFeedOptions } from './resources/calendar.js'
+export type { GetQueueOptions, GetQueueDetailsOptions, DeleteQueueOptions } from './resources/queue.js'
 export type { GetHistoryOptions } from './resources/history.js'
 export type { SearchReleasesOptions } from './resources/release.js'
 export type { GetBlocklistOptions } from './resources/blocklist.js'
 export type { GetManualImportOptions } from './resources/manualImport.js'
+export type { FileSystemEntry, GetFileSystemOptions } from './resources/filesystem.js'

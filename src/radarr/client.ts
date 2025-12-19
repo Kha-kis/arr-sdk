@@ -31,6 +31,7 @@ import { LanguageResourceApi } from './resources/language.js'
 import { LocalizationResource } from './resources/localization.js'
 import { CustomFilterResource } from './resources/customFilter.js'
 import { WantedResource } from './resources/wanted.js'
+import { FileSystemResource } from './resources/filesystem.js'
 
 export class RadarrClient extends BaseClient {
   public readonly movie: MovieResource
@@ -82,6 +83,7 @@ export class RadarrClient extends BaseClient {
   public readonly localization: LocalizationResource
   public readonly customFilter: CustomFilterResource
   public readonly wanted: WantedResource
+  public readonly filesystem: FileSystemResource
 
   constructor(config: ClientConfig) {
     super(config)
@@ -135,5 +137,6 @@ export class RadarrClient extends BaseClient {
     this.localization = new LocalizationResource(this)
     this.customFilter = new CustomFilterResource(this)
     this.wanted = new WantedResource(this)
+    this.filesystem = new FileSystemResource(this)
   }
 }

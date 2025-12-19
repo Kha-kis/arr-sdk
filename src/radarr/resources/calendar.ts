@@ -8,6 +8,14 @@ export interface CalendarOptions {
   tags?: number[]
 }
 
+export interface CalendarFeedOptions {
+  pastDays?: number
+  futureDays?: number
+  tags?: string
+  unmonitored?: boolean
+  [key: string]: unknown
+}
+
 export class CalendarResource {
   constructor(private client: ClientMethods) {}
 
@@ -32,5 +40,13 @@ export class CalendarResource {
 
   async getById(id: number): Promise<Movie> {
     return this.client.get(`/api/v3/calendar/${id}`)
+  }
+
+  /**
+   * Get calendar as iCalendar feed (.ics format)
+   * Note: Returns raw iCalendar text, not JSON
+   */
+  async getICalFeed(options?: CalendarFeedOptions): Promise<string> {
+    return this.client.get('/feed/v3/calendar/radarr.ics', options)
   }
 }

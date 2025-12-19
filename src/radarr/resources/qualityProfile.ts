@@ -1,5 +1,5 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { QualityProfile, QualityDefinition } from '../types.js'
+import type { QualityProfile, QualityDefinition, QualityDefinitionLimits } from '../types.js'
 
 export class QualityProfileResource {
   constructor(private client: ClientMethods) {}
@@ -46,5 +46,9 @@ export class QualityDefinitionResource {
 
   async updateAll(definitions: QualityDefinition[]): Promise<QualityDefinition[]> {
     return this.client.put('/api/v3/qualitydefinition/update', definitions)
+  }
+
+  async getLimits(): Promise<QualityDefinitionLimits> {
+    return this.client.get('/api/v3/qualitydefinition/limits')
   }
 }

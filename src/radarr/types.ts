@@ -18,6 +18,7 @@ export type CollectionUpdate = components['schemas']['CollectionUpdateResource']
 export type QualityProfile = components['schemas']['QualityProfileResource']
 export type QualityProfileQualityItem = components['schemas']['QualityProfileQualityItemResource']
 export type QualityDefinition = components['schemas']['QualityDefinitionResource']
+export type QualityDefinitionLimits = components['schemas']['QualityDefinitionLimitsResource']
 export type Quality = components['schemas']['Quality']
 export type QualityModel = components['schemas']['QualityModel']
 

@@ -13,6 +13,10 @@ export class SystemInfoResource {
     return this.client.get('/api/v1/system/routes')
   }
 
+  async getDuplicateRoutes(): Promise<unknown[]> {
+    return this.client.get('/api/v1/system/routes/duplicate')
+  }
+
   async restart(): Promise<void> {
     return this.client.post('/api/v1/system/restart')
   }
@@ -54,7 +58,11 @@ export class BackupResource {
   }
 
   async restore(id: number): Promise<void> {
-    return this.client.post('/api/v1/system/backup/restore/upload', undefined, { id })
+    return this.client.post(`/api/v1/system/backup/restore/${id}`)
+  }
+
+  async restoreUpload(file: unknown): Promise<void> {
+    return this.client.post('/api/v1/system/backup/restore/upload', file)
   }
 }
 
