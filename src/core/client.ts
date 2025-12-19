@@ -199,7 +199,11 @@ export abstract class BaseClient implements ClientMethods {
     return this.request<T>('DELETE', path, { body, params })
   }
 
-  async getBuffer(path: string, params?: Record<string, unknown>): Promise<ArrayBuffer> {
+  private async fetchRaw<T>(
+    path: string,
+    params: Record<string, unknown> | undefined,
+    parser: (response: Response) => Promise<T>
+  ): Promise<T> {
     const url = new URL(joinPath(this.config.baseUrl, path))
 
     if (params) {
@@ -253,64 +257,15 @@ export abstract class BaseClient implements ClientMethods {
       throw error
     }
 
-    return response.arrayBuffer()
+    return parser(response)
+  }
+
+  async getBuffer(path: string, params?: Record<string, unknown>): Promise<ArrayBuffer> {
+    return this.fetchRaw(path, params, (res) => res.arrayBuffer())
   }
 
   async getText(path: string, params?: Record<string, unknown>): Promise<string> {
-    const url = new URL(joinPath(this.config.baseUrl, path))
-
-    if (params) {
-      const queryParams = buildQueryParams(params)
-      queryParams.forEach((value, key) => {
-        url.searchParams.append(key, value)
-      })
-    }
-
-    const headers: Record<string, string> = {
-      'X-Api-Key': this.config.apiKey,
-      ...this.config.headers
-    }
-
-    const requestConfig: RequestConfig = {
-      url,
-      method: 'GET',
-      headers,
-      body: undefined
-    }
-
-    await this.config.onRequest?.(requestConfig)
-
-    let response: Response
-
-    try {
-      response = await fetch(url, {
-        method: 'GET',
-        headers,
-        signal: AbortSignal.timeout(this.config.timeout)
-      })
-    } catch (error) {
-      if (error instanceof Error) {
-        if (error.name === 'TimeoutError' || error.name === 'AbortError') {
-          const timeoutError = new TimeoutError(`Request timed out after ${this.config.timeout}ms`)
-          await this.config.onError?.(timeoutError)
-          throw timeoutError
-        }
-        const networkError = new NetworkError(error.message, error)
-        await this.config.onError?.(networkError)
-        throw networkError
-      }
-      throw error
-    }
-
-    await this.config.onResponse?.(response)
-
-    if (!response.ok) {
-      const error = await this.parseError(response)
-      await this.config.onError?.(error)
-      throw error
-    }
-
-    return response.text()
+    return this.fetchRaw(path, params, (res) => res.text())
   }
 
   async *paginate<T>(
