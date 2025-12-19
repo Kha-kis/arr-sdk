@@ -158,6 +158,22 @@ try {
 }
 ```
 
+## Breaking Changes
+
+See [CHANGELOG.md](./CHANGELOG.md) for a complete list of breaking changes.
+
+### Queue Options
+
+The `quality` field in `GetQueueOptions` changed from `number` to `number[]`:
+
+```typescript
+// Before (v0.1.x)
+await client.queue.get({ quality: 1 })
+
+// After (v0.2.0+)
+await client.queue.get({ quality: [1] })
+```
+
 ## Available Resources
 
 ### Sonarr
@@ -165,10 +181,11 @@ try {
 - `series` - Series management
 - `episode` - Episode management
 - `episodeFile` - Episode file management
-- `calendar` - Calendar/upcoming episodes
+- `calendar` - Calendar/upcoming episodes (includes iCal feed)
 - `queue` - Download queue
+- `wanted` - Missing and cutoff unmet episodes
 - `history` - Activity history
-- `command` - Commands (refresh, scan, etc.)
+- `command` - Commands (refresh, scan, manualImport, etc.)
 - `qualityProfile` - Quality profiles
 - `qualityDefinition` - Quality definitions
 - `rootFolder` - Root folders
@@ -180,17 +197,20 @@ try {
 - `metadata` - Metadata providers
 - `release` - Release search/grab
 - `blocklist` - Blocklisted releases
-- `system` - System info, health, logs
+- `system` - System info, health, logs, ping
+- `filesystem` - Browse filesystem paths
+- `mediaCover` - Download series cover images
 - `config` - Host/UI/naming configuration
 
 ### Radarr
 
 - `movie` - Movie management
 - `collection` - Collection management
-- `calendar` - Calendar/upcoming releases
+- `calendar` - Calendar/upcoming releases (includes iCal feed)
 - `queue` - Download queue
+- `wanted` - Missing and cutoff unmet movies
 - `history` - Activity history
-- `command` - Commands (refresh, scan, etc.)
+- `command` - Commands (refresh, scan, manualImport, etc.)
 - `qualityProfile` - Quality profiles
 - `qualityDefinition` - Quality definitions
 - `customFormat` - Custom formats
@@ -203,22 +223,28 @@ try {
 - `metadata` - Metadata providers
 - `release` - Release search/grab
 - `blocklist` - Blocklisted releases
-- `system` - System info, health, logs
+- `system` - System info, health, logs, ping
+- `filesystem` - Browse filesystem paths
+- `mediaCover` - Download movie cover images
 - `config` - Host/UI/naming configuration
 
 ### Prowlarr
 
 - `indexer` - Indexer management
+- `indexerStats` - Indexer statistics with filtering
 - `indexerProxy` - Indexer proxies
 - `application` - Application connections
 - `appProfile` - App sync profiles
 - `search` - Search across indexers
+- `newznab` - Newznab/Torznab protocol (caps, search, download)
 - `command` - Commands
 - `history` - Search history
 - `tag` - Tags
 - `downloadClient` - Download clients
 - `notification` - Notifications
-- `system` - System info, health, logs
+- `system` - System info, health, logs, ping
+- `filesystem` - Browse filesystem paths
+- `localization` - Localization strings
 - `config` - Configuration
 
 ## Tree-Shaking
