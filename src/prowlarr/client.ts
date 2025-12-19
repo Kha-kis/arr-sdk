@@ -14,6 +14,7 @@ import { HostConfigResource, UiConfigResource, DevelopmentConfigResource } from 
 import { CustomFilterResource } from './resources/customFilter.js'
 import { FileSystemResource } from './resources/filesystem.js'
 import { LocalizationResource } from './resources/localization.js'
+import { NewznabResource } from './resources/newznab.js'
 
 export class ProwlarrClient extends BaseClient {
   public readonly indexer: IndexerResource
@@ -43,6 +44,7 @@ export class ProwlarrClient extends BaseClient {
   public readonly customFilter: CustomFilterResource
   public readonly filesystem: FileSystemResource
   public readonly localization: LocalizationResource
+  public readonly newznab: NewznabResource
 
   constructor(config: ClientConfig) {
     super(config)
@@ -74,5 +76,6 @@ export class ProwlarrClient extends BaseClient {
     this.customFilter = new CustomFilterResource(this)
     this.filesystem = new FileSystemResource(this)
     this.localization = new LocalizationResource(this)
+    this.newznab = new NewznabResource(this)
   }
 }

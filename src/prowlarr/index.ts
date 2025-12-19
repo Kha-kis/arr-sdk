@@ -78,3 +78,11 @@ export type { SearchOptions } from './resources/search.js'
 export type { GetHistoryOptions } from './resources/history.js'
 export type { GetIndexerStatsOptions } from './resources/indexer.js'
 export type { FileSystemEntry, GetFileSystemOptions } from './resources/filesystem.js'
+export type {
+  NewznabSearchOptions,
+  NewznabTvSearchOptions,
+  NewznabMovieSearchOptions,
+  NewznabMusicSearchOptions,
+  NewznabBookSearchOptions
+} from './resources/newznab.js'
+export { NewznabResource } from './resources/newznab.js'
