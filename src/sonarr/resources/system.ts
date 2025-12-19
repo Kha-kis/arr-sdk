@@ -97,6 +97,21 @@ export class LogResource {
   }
 }
 
+function validateFilename(filename: string): void {
+  if (!filename || typeof filename !== 'string') {
+    throw new Error('Invalid filename: filename must be a non-empty string')
+  }
+  if (filename.includes('/') || filename.includes('\\')) {
+    throw new Error('Invalid filename: path separators are not allowed')
+  }
+  if (filename.includes('..')) {
+    throw new Error('Invalid filename: parent directory references are not allowed')
+  }
+  if (/^[a-zA-Z]:/.test(filename)) {
+    throw new Error('Invalid filename: absolute paths are not allowed')
+  }
+}
+
 export class LogFileResource {
   constructor(private client: ClientMethods) {}
 
@@ -112,6 +127,7 @@ export class LogFileResource {
    * Download a specific log file's contents
    */
   async download(filename: string): Promise<string> {
+    validateFilename(filename)
     const sanitized = encodeURIComponent(filename)
     return this.client.getText(`/api/v3/log/file/${sanitized}`)
   }
@@ -120,6 +136,7 @@ export class LogFileResource {
    * Download a specific update log file's contents
    */
   async downloadUpdate(filename: string): Promise<string> {
+    validateFilename(filename)
     const sanitized = encodeURIComponent(filename)
     return this.client.getText(`/api/v3/log/file/update/${sanitized}`)
   }
