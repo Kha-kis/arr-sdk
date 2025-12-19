@@ -24,6 +24,13 @@ export class SystemInfoResource {
   async shutdown(): Promise<void> {
     return this.client.post('/api/v3/system/shutdown')
   }
+
+  /**
+   * Simple health check - returns "Pong"
+   */
+  async ping(): Promise<string> {
+    return this.client.get('/ping')
+  }
 }
 
 export class HealthResource {
@@ -99,6 +106,20 @@ export class LogFileResource {
 
   async getUpdate(): Promise<LogFile[]> {
     return this.client.get('/api/v3/log/file/update')
+  }
+
+  /**
+   * Download a specific log file's contents
+   */
+  async download(filename: string): Promise<string> {
+    return this.client.get(`/api/v3/log/file/${filename}`)
+  }
+
+  /**
+   * Download a specific update log file's contents
+   */
+  async downloadUpdate(filename: string): Promise<string> {
+    return this.client.get(`/api/v3/log/file/update/${filename}`)
   }
 }
 
