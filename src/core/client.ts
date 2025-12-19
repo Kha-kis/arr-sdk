@@ -212,7 +212,7 @@ export abstract class BaseClient implements ClientMethods {
       url,
       method: 'POST',
       headers,
-      body: undefined // FormData is passed directly to fetch, not serialized
+      body: formData
     }
 
     await this.config.onRequest?.(requestConfig)
@@ -223,7 +223,7 @@ export abstract class BaseClient implements ClientMethods {
       response = await fetch(url, {
         method: 'POST',
         headers,
-        body: formData,
+        body: requestConfig.body,
         signal: AbortSignal.timeout(this.config.timeout)
       })
     } catch (error) {

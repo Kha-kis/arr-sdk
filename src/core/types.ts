@@ -12,7 +12,7 @@ export interface RequestConfig {
   url: URL
   method: string
   headers: Record<string, string>
-  body?: string
+  body?: string | FormData
 }
 
 export interface PaginatedResponse<T> {
