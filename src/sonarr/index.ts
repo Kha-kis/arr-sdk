@@ -142,7 +142,10 @@ export type {
 } from './types.js'
 
 // Re-export command types
-export type { SonarrCommand } from './resources/command.js'
+export type { SonarrCommand, SonarrManualImportFile } from './resources/command.js'
+
+// Re-export wanted types
+export type { GetWantedOptions } from './resources/wanted.js'
 
 // Re-export option types
 export type { GetSeriesOptions, DeleteSeriesOptions } from './resources/series.js'

@@ -135,7 +135,10 @@ export type {
 } from './types.js'
 
 // Re-export command types
-export type { RadarrCommand } from './resources/command.js'
+export type { RadarrCommand, RadarrManualImportFile } from './resources/command.js'
+
+// Re-export wanted types
+export type { GetWantedOptions } from './resources/wanted.js'
 
 // Re-export option types
 export type { GetMovieOptions, DeleteMovieOptions } from './resources/movie.js'

@@ -27,6 +27,7 @@ import { LanguageResourceApi, LanguageProfileResource } from './resources/langua
 import { LocalizationResource } from './resources/localization.js'
 import { CustomFilterResource } from './resources/customFilter.js'
 import { SeasonPassResource } from './resources/seasonPass.js'
+import { WantedResource } from './resources/wanted.js'
 
 export class SonarrClient extends BaseClient {
   public readonly series: SeriesResource
@@ -78,6 +79,7 @@ export class SonarrClient extends BaseClient {
   public readonly localization: LocalizationResource
   public readonly customFilter: CustomFilterResource
   public readonly seasonPass: SeasonPassResource
+  public readonly wanted: WantedResource
 
   constructor(config: ClientConfig) {
     super(config)
@@ -131,5 +133,6 @@ export class SonarrClient extends BaseClient {
     this.localization = new LocalizationResource(this)
     this.customFilter = new CustomFilterResource(this)
     this.seasonPass = new SeasonPassResource(this)
+    this.wanted = new WantedResource(this)
   }
 }
