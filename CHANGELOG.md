@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed iCalendar feed endpoints to use `getText()` instead of `get()` for proper text/calendar response handling
-- Fixed `ManualImport` command `importMode` to use capitalized values (`'Auto' | 'Move' | 'Copy'`) matching the API
+- Fixed `ManualImport` command `importMode` to use capitalized values matching the API (Sonarr: `'Auto' | 'Move' | 'Copy'`, Radarr: `'Move' | 'Copy'`)
 
 ### Breaking Changes
 

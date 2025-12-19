@@ -33,7 +33,7 @@ export type RadarrCommand =
   | { name: 'RenameMovie'; movieIds: number[] }
   | { name: 'Rescan'; movieId?: number }
   | { name: 'RssSync' }
-  | { name: 'ManualImport'; files: RadarrManualImportFile[]; importMode?: 'Auto' | 'Move' | 'Copy' }
+  | { name: 'ManualImport'; files: RadarrManualImportFile[]; importMode?: 'Move' | 'Copy' }
 
 export class CommandResource_ {
   constructor(private client: ClientMethods) {}
@@ -99,7 +99,7 @@ export class CommandResource_ {
     return this.execute({ name: 'RefreshCollections' })
   }
 
-  async manualImport(files: RadarrManualImportFile[], importMode?: 'Auto' | 'Move' | 'Copy'): Promise<CommandResource> {
+  async manualImport(files: RadarrManualImportFile[], importMode?: 'Move' | 'Copy'): Promise<CommandResource> {
     return this.execute({ name: 'ManualImport', files, importMode })
   }
 }
