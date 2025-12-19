@@ -61,6 +61,6 @@ export class CalendarResource {
    * Note: Returns raw iCalendar text, not JSON
    */
   async getICalFeed(options?: CalendarFeedOptions): Promise<string> {
-    return this.client.get('/feed/v3/calendar/sonarr.ics', options)
+    return this.client.getText('/feed/v3/calendar/sonarr.ics', options)
   }
 }
