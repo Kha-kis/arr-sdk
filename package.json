@@ -1,6 +1,6 @@
 {
   "name": "arr-sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Unified TypeScript SDK for Sonarr, Radarr, and Prowlarr",
   "type": "module",
   "main": "./dist/index.cjs",
