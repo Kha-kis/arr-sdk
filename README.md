@@ -1,6 +1,6 @@
 # arr-sdk
 
-Unified TypeScript SDK for Sonarr, Radarr, and Prowlarr APIs.
+Unified TypeScript SDK for Sonarr, Radarr, Lidarr, and Prowlarr APIs.
 
 ## Features
 
@@ -67,6 +67,38 @@ const newMovie = await radarr.movie.create({
   qualityProfileId: 1,
   rootFolderPath: '/movies'
 })
+```
+
+### Lidarr
+
+```typescript
+import { LidarrClient } from 'arr-sdk/lidarr'
+
+const lidarr = new LidarrClient({
+  baseUrl: 'http://localhost:8686',
+  apiKey: 'your-api-key'
+})
+
+// Get all artists
+const artists = await lidarr.artist.getAll()
+
+// Search for an artist
+const results = await lidarr.artist.lookup('The Beatles')
+
+// Add an artist
+const newArtist = await lidarr.artist.create({
+  foreignArtistId: 'b10bbbfc-cf9e-42e0-be17-e2c3e1d2600d',
+  artistName: 'The Beatles',
+  qualityProfileId: 1,
+  metadataProfileId: 1,
+  rootFolderPath: '/music'
+})
+
+// Get all albums
+const albums = await lidarr.album.getAll()
+
+// Get tracks for an album
+const tracks = await lidarr.track.getByAlbumId(1)
 ```
 
 ### Prowlarr
@@ -228,6 +260,24 @@ await client.queue.get({ quality: [1] })
 - `mediaCover` - Download movie cover images
 - `config` - Host/UI/naming configuration
 
+### Lidarr
+
+- `artist` - Artist management
+- `album` - Album management
+- `track` - Track management
+- `trackFile` - Track file management
+- `calendar` - Calendar/upcoming releases
+- `queue` - Download queue
+- `wanted` - Missing albums and cutoff unmet
+- `history` - Activity history
+- `command` - Commands (refresh, scan, etc.)
+- `qualityProfile` - Quality profiles
+- `qualityDefinition` - Quality definitions
+- `metadataProfile` - Metadata profiles (Lidarr-specific)
+- `rootFolder` - Root folders
+- `tag` - Tags
+- `system` - System info, health, logs, ping
+
 ### Prowlarr
 
 - `indexer` - Indexer management
@@ -258,11 +308,14 @@ import { SonarrClient } from 'arr-sdk/sonarr'
 // Import only Radarr
 import { RadarrClient } from 'arr-sdk/radarr'
 
+// Import only Lidarr
+import { LidarrClient } from 'arr-sdk/lidarr'
+
 // Import only Prowlarr
 import { ProwlarrClient } from 'arr-sdk/prowlarr'
 
 // Or import everything
-import { SonarrClient, RadarrClient, ProwlarrClient } from 'arr-sdk'
+import { SonarrClient, RadarrClient, LidarrClient, ProwlarrClient } from 'arr-sdk'
 ```
 
 ## Requirements

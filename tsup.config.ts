@@ -5,7 +5,8 @@ export default defineConfig({
     index: 'src/index.ts',
     'sonarr/index': 'src/sonarr/index.ts',
     'radarr/index': 'src/radarr/index.ts',
-    'prowlarr/index': 'src/prowlarr/index.ts'
+    'prowlarr/index': 'src/prowlarr/index.ts',
+    'lidarr/index': 'src/lidarr/index.ts'
   },
   format: ['cjs', 'esm'],
   dts: true,

@@ -17,6 +17,10 @@ const specs = [
   {
     name: 'prowlarr',
     url: 'https://raw.githubusercontent.com/Prowlarr/Prowlarr/develop/src/Prowlarr.Api.V1/openapi.json'
+  },
+  {
+    name: 'lidarr',
+    url: 'https://raw.githubusercontent.com/lidarr/Lidarr/develop/src/Lidarr.Api.V1/openapi.json'
   }
 ]
 
