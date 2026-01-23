@@ -1,6 +1,6 @@
 # arr-sdk
 
-Unified TypeScript SDK for Sonarr, Radarr, Lidarr, and Prowlarr APIs.
+Unified TypeScript SDK for Sonarr, Radarr, Lidarr, Readarr, and Prowlarr APIs.
 
 ## Features
 
@@ -99,6 +99,38 @@ const albums = await lidarr.album.getAll()
 
 // Get tracks for an album
 const tracks = await lidarr.track.getByAlbumId(1)
+```
+
+### Readarr
+
+```typescript
+import { ReadarrClient } from 'arr-sdk/readarr'
+
+const readarr = new ReadarrClient({
+  baseUrl: 'http://localhost:8787',
+  apiKey: 'your-api-key'
+})
+
+// Get all authors
+const authors = await readarr.author.getAll()
+
+// Search for an author
+const results = await readarr.author.lookup('Stephen King')
+
+// Add an author
+const newAuthor = await readarr.author.create({
+  foreignAuthorId: '12345-67890-abcdef',
+  authorName: 'Stephen King',
+  qualityProfileId: 1,
+  metadataProfileId: 1,
+  rootFolderPath: '/books'
+})
+
+// Get all books
+const books = await readarr.book.getAll()
+
+// Get books by author
+const authorBooks = await readarr.book.getByAuthorId(1)
 ```
 
 ### Prowlarr
@@ -278,6 +310,24 @@ await client.queue.get({ quality: [1] })
 - `tag` - Tags
 - `system` - System info, health, logs, ping
 
+### Readarr
+
+- `author` - Author management
+- `book` - Book management
+- `edition` - Edition access (different book versions)
+- `bookFile` - Book file management
+- `calendar` - Calendar/upcoming releases
+- `queue` - Download queue
+- `wanted` - Missing books and cutoff unmet
+- `history` - Activity history
+- `command` - Commands (refresh, scan, etc.)
+- `qualityProfile` - Quality profiles
+- `qualityDefinition` - Quality definitions
+- `metadataProfile` - Metadata profiles
+- `rootFolder` - Root folders
+- `tag` - Tags
+- `system` - System info, health, logs, ping
+
 ### Prowlarr
 
 - `indexer` - Indexer management
@@ -311,11 +361,14 @@ import { RadarrClient } from 'arr-sdk/radarr'
 // Import only Lidarr
 import { LidarrClient } from 'arr-sdk/lidarr'
 
+// Import only Readarr
+import { ReadarrClient } from 'arr-sdk/readarr'
+
 // Import only Prowlarr
 import { ProwlarrClient } from 'arr-sdk/prowlarr'
 
 // Or import everything
-import { SonarrClient, RadarrClient, LidarrClient, ProwlarrClient } from 'arr-sdk'
+import { SonarrClient, RadarrClient, LidarrClient, ReadarrClient, ProwlarrClient } from 'arr-sdk'
 ```
 
 ## Requirements

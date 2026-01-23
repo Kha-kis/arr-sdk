@@ -3,6 +3,7 @@ export { SonarrClient } from './sonarr/index.js'
 export { RadarrClient } from './radarr/index.js'
 export { ProwlarrClient } from './prowlarr/index.js'
 export { LidarrClient } from './lidarr/index.js'
+export { ReadarrClient } from './readarr/index.js'
 
 // Core exports
 export { BaseClient } from './core/client.js'

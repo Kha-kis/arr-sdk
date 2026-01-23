@@ -21,6 +21,10 @@ const specs = [
   {
     name: 'lidarr',
     url: 'https://raw.githubusercontent.com/lidarr/Lidarr/develop/src/Lidarr.Api.V1/openapi.json'
+  },
+  {
+    name: 'readarr',
+    url: 'https://raw.githubusercontent.com/Readarr/Readarr/develop/src/Readarr.Api.V1/openapi.json'
   }
 ]
 

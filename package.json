@@ -1,7 +1,7 @@
 {
   "name": "arr-sdk",
-  "version": "0.4.0",
-  "description": "Unified TypeScript SDK for Sonarr, Radarr, Lidarr, and Prowlarr",
+  "version": "0.5.0",
+  "description": "Unified TypeScript SDK for Sonarr, Radarr, Lidarr, Readarr, and Prowlarr",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
@@ -31,6 +31,11 @@
       "types": "./dist/lidarr/index.d.ts",
       "import": "./dist/lidarr/index.js",
       "require": "./dist/lidarr/index.cjs"
+    },
+    "./readarr": {
+      "types": "./dist/readarr/index.d.ts",
+      "import": "./dist/readarr/index.js",
+      "require": "./dist/readarr/index.cjs"
     }
   },
   "files": [
@@ -60,6 +65,7 @@
     "sonarr",
     "radarr",
     "lidarr",
+    "readarr",
     "prowlarr",
     "api",
     "sdk",
