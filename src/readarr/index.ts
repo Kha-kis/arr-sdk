@@ -151,3 +151,7 @@ export type { GetQueueOptions } from './resources/queue.js'
 export type { GetHistoryOptions } from './resources/history.js'
 export type { GetWantedOptions } from './resources/wanted.js'
 export type { GetLogOptions } from './resources/system.js'
+
+// Re-export manual import types
+export type { GetManualImportOptions } from './resources/manualImport.js'
+export type { ReadarrManualImportFile } from './resources/command.js'

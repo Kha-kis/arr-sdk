@@ -6,6 +6,7 @@ import { CalendarResource } from './resources/calendar.js'
 import { CommandResource_ } from './resources/command.js'
 import { QueueResource } from './resources/queue.js'
 import { HistoryResource } from './resources/history.js'
+import { ManualImportResource } from './resources/manualImport.js'
 import { QualityProfileResource, QualityDefinitionResource } from './resources/qualityProfile.js'
 import { MetadataProfileResource } from './resources/metadataProfile.js'
 import { TagResource, TagDetailsResource } from './resources/tag.js'
@@ -22,6 +23,7 @@ export class LidarrClient extends BaseClient {
   public readonly command: CommandResource_
   public readonly queue: QueueResource
   public readonly history: HistoryResource
+  public readonly manualImport: ManualImportResource
   public readonly qualityProfile: QualityProfileResource
   public readonly qualityDefinition: QualityDefinitionResource
   public readonly metadataProfile: MetadataProfileResource
@@ -49,6 +51,7 @@ export class LidarrClient extends BaseClient {
     this.command = new CommandResource_(this)
     this.queue = new QueueResource(this)
     this.history = new HistoryResource(this)
+    this.manualImport = new ManualImportResource(this)
     this.qualityProfile = new QualityProfileResource(this)
     this.qualityDefinition = new QualityDefinitionResource(this)
     this.metadataProfile = new MetadataProfileResource(this)

@@ -1,5 +1,22 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { CommandResource } from '../types.js'
+import type { CommandResource, QualityModel } from '../types.js'
+
+/**
+ * File entry for the ManualImport command
+ */
+export interface ReadarrManualImportFile {
+  path: string
+  folderName?: string
+  downloadId?: string
+  quality?: QualityModel
+  releaseGroup?: string
+  indexerFlags?: number
+  authorId?: number
+  bookId?: number
+  foreignEditionId?: string
+  disableReleaseSwitching?: boolean
+  replaceExistingFiles?: boolean
+}
 
 export type ReadarrCommand =
   | { name: 'RefreshAuthor'; authorId?: number }
@@ -22,6 +39,8 @@ export type ReadarrCommand =
   | { name: 'ClearBlocklist' }
   | { name: 'MessagingCleanup' }
   | { name: 'ImportListSync' }
+  | { name: 'DownloadedBooksScan'; path?: string; downloadClientId?: string; importMode?: 'Auto' | 'Move' | 'Copy' }
+  | { name: 'ManualImport'; files: ReadarrManualImportFile[]; importMode?: 'Auto' | 'Move' | 'Copy' }
 
 export class CommandResource_ {
   constructor(private client: ClientMethods) {}
@@ -40,5 +59,50 @@ export class CommandResource_ {
 
   async cancel(id: number): Promise<void> {
     return this.client.delete(`/api/v1/command/${id}`)
+  }
+
+  // Convenience methods
+  async refreshAuthor(authorId?: number): Promise<CommandResource> {
+    return this.execute({ name: 'RefreshAuthor', authorId })
+  }
+
+  async refreshBook(bookId?: number): Promise<CommandResource> {
+    return this.execute({ name: 'RefreshBook', bookId })
+  }
+
+  async rescanFolders(): Promise<CommandResource> {
+    return this.execute({ name: 'RescanFolders' })
+  }
+
+  async authorSearch(authorId: number): Promise<CommandResource> {
+    return this.execute({ name: 'AuthorSearch', authorId })
+  }
+
+  async bookSearch(bookIds: number[]): Promise<CommandResource> {
+    return this.execute({ name: 'BookSearch', bookIds })
+  }
+
+  async missingBookSearch(filterKey?: string, filterValue?: string): Promise<CommandResource> {
+    return this.execute({ name: 'MissingBookSearch', filterKey, filterValue })
+  }
+
+  async rssSync(): Promise<CommandResource> {
+    return this.execute({ name: 'RssSync' })
+  }
+
+  async backup(): Promise<CommandResource> {
+    return this.execute({ name: 'Backup' })
+  }
+
+  async clearBlocklist(): Promise<CommandResource> {
+    return this.execute({ name: 'ClearBlocklist' })
+  }
+
+  async downloadedBooksScan(options?: { path?: string; downloadClientId?: string; importMode?: 'Auto' | 'Move' | 'Copy' }): Promise<CommandResource> {
+    return this.execute({ name: 'DownloadedBooksScan', ...options })
+  }
+
+  async manualImport(files: ReadarrManualImportFile[], importMode?: 'Auto' | 'Move' | 'Copy'): Promise<CommandResource> {
+    return this.execute({ name: 'ManualImport', files, importMode })
   }
 }
