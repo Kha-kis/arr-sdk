@@ -1,0 +1,90 @@
+name: Regenerate OpenAPI types
+
+on:
+  schedule:
+    # Every Monday at 06:00 UTC
+    - cron: '0 6 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: regen-openapi
+  cancel-in-progress: true
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Regenerate types from upstream specs
+        run: npm run generate
+
+      - name: Typecheck regenerated output
+        # If a string enum was renamed upstream, the resource maps (e.g.
+        # history.ts MOVIE_HISTORY_EVENT_TYPE_VALUES) will fail to satisfy
+        # `Record<MovieHistoryEventType, number>` and tsc will reject.
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm run test:run
+
+      - name: Detect changes and build PR body
+        id: diff
+        run: |
+          if [[ -z "$(git status --porcelain src/)" ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+          {
+            echo "Automated regeneration from \`npm run generate\`."
+            echo
+            echo "Upstream specs tracked:"
+            echo "- Sonarr V3 — \`src/Sonarr.Api.V3/openapi.json\`"
+            echo "- Radarr V3 — \`src/Radarr.Api.V3/openapi.json\`"
+            echo "- Lidarr V1 — \`src/Lidarr.Api.V1/openapi.json\`"
+            echo "- Readarr V1 — \`src/Readarr.Api.V1/openapi.json\`"
+            echo "- Prowlarr V1 — \`src/Prowlarr.Api.V1/openapi.json\`"
+            echo
+            echo '```'
+            git -c color.ui=never diff --stat src/ | head -50
+            echo '```'
+            echo
+            echo "**Before merging, manually verify**:"
+            echo "- [ ] No enum members were renamed in a way that breaks the numeric"
+            echo "      maps in \`src/*/resources/history.ts\` (tsc would catch this"
+            echo "      in CI, but a sanity check is cheap)."
+            echo "- [ ] No newly added enum members need numeric values added to"
+            echo "      those maps. Check the upstream C# source for each app's"
+            echo "      \`*HistoryEventType\` enum."
+            echo "- [ ] No breaking shape changes to widely-used types like"
+            echo "      \`History\`, \`Movie\`, \`Series\`, etc."
+          } > pr-body.md
+
+      - name: Open or update PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/regen-openapi
+          base: main
+          commit-message: 'chore: regenerate types from upstream OpenAPI specs'
+          title: 'chore: regenerate types from upstream OpenAPI specs'
+          labels: |
+            generated
+            dependencies
+          body-path: pr-body.md
