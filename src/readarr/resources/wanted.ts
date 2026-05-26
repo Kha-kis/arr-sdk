@@ -1,11 +1,8 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { BookPagingResource, SortDirection } from '../types.js'
+import type { PaginationOptions } from '../../core/types.js'
+import type { BookPagingResource } from '../types.js'
 
-export interface GetWantedOptions {
-  page?: number
-  pageSize?: number
-  sortKey?: string
-  sortDirection?: SortDirection
+export interface GetWantedOptions extends PaginationOptions {
   includeAuthor?: boolean
 }
 

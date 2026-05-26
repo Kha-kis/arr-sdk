@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.7.1] - 2026-05-26
+
+### Fixed
+
+- **Lidarr/Readarr paginated option types now share the same nominal base as Sonarr/Radarr/Prowlarr.** `GetHistoryOptions`, `GetQueueOptions`, and `GetWantedOptions` on Lidarr and Readarr previously inlined the pagination fields (`page`, `pageSize`, `sortKey`, `sortDirection`) directly into each interface, while the other three apps inherited them via `extends PaginationOptions`. The structural divergence broke consumer code that holds a union of clients (e.g. `SonarrClient | RadarrClient | LidarrClient | ReadarrClient`) and called shared paginated methods — TypeScript's intersection of differently-shaped interfaces produced excess-property errors on fields that should have been valid. All four apps now extend the shared `PaginationOptions` interface, giving a single nominal identity across the SDK.
+- Lidarr and Readarr `GetHistoryOptions.eventType` now accepts an array form (`EventTypeFilter = EventTypeInput | EventTypeInput[]`), matching Sonarr/Radarr/Prowlarr. Upstream Lidarr/Readarr controllers bind `eventType` as `int[]`, so this was always supported on the wire; the SDK type was just narrower than the upstream allowed. The numeric-encoding fix from 0.7.0 (#2) still applies to both single and array forms.
+- Readarr `GetHistoryOptions.get` now emits the numeric `eventType` query value, restoring symmetry with the 0.7.0 encoding fix that was already in place for the other four apps.
+
+### Added
+
+- `tests/types/union-client.ts` — type-only test fixture exercising union-of-clients call patterns across all five apps. Run via `npm run test:types`. Pins the contracts that broke for consumers in the 0.7.0 release so future regressions surface at typecheck time rather than at the consumer's project.
+
+### Known follow-up
+
+- `GetLogOptions` on Lidarr (`src/lidarr/resources/system.ts`) and Readarr (`src/readarr/resources/system.ts`) still inline pagination fields. Those files have unrelated WIP and were intentionally not touched in this patch — they'll be unified in a follow-up.
+
 ## [0.7.0] - 2026-05-26
 
 ### Added

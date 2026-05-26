@@ -1,5 +1,6 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { History, HistoryPagingResource, SortDirection, EntityHistoryEventType } from '../types.js'
+import type { PaginationOptions } from '../../core/types.js'
+import type { History, HistoryPagingResource, EntityHistoryEventType } from '../types.js'
 
 // Numeric values pinned to upstream Readarr enum
 // (src/NzbDrone.Core/History/EntityHistory.cs — EntityHistoryEventType).
@@ -19,21 +20,28 @@ const ENTITY_HISTORY_EVENT_TYPE_VALUES = {
 } as const satisfies Record<EntityHistoryEventType, number>
 
 export type EventTypeInput = EntityHistoryEventType | number
+export type EventTypeFilter = EventTypeInput | EventTypeInput[]
 
-function encodeEventType(value: EventTypeInput | undefined): string | undefined {
+function encodeEventType(value: EventTypeInput): number
+function encodeEventType(value: EventTypeFilter): number | number[]
+function encodeEventType(value: EventTypeFilter | undefined): number | number[] | undefined
+function encodeEventType(value: EventTypeFilter | undefined): number | number[] | undefined {
   if (value === undefined) return undefined
-  const numeric = typeof value === 'number' ? value : ENTITY_HISTORY_EVENT_TYPE_VALUES[value]
-  return String(numeric)
+  if (Array.isArray(value)) {
+    return value.map((v) => (typeof v === 'number' ? v : ENTITY_HISTORY_EVENT_TYPE_VALUES[v]))
+  }
+  return typeof value === 'number' ? value : ENTITY_HISTORY_EVENT_TYPE_VALUES[value]
 }
 
-export interface GetHistoryOptions {
-  page?: number
-  pageSize?: number
-  sortKey?: string
-  sortDirection?: SortDirection
+function encodeEventTypeAsString(value: EventTypeInput | undefined): string | undefined {
+  if (value === undefined) return undefined
+  return String(typeof value === 'number' ? value : ENTITY_HISTORY_EVENT_TYPE_VALUES[value])
+}
+
+export interface GetHistoryOptions extends PaginationOptions {
   includeAuthor?: boolean
   includeBook?: boolean
-  eventType?: EventTypeInput
+  eventType?: EventTypeFilter
   downloadId?: string
   authorId?: number
   bookId?: number
@@ -50,8 +58,14 @@ export class HistoryResource {
     if (options?.sortDirection) params.set('sortDirection', options.sortDirection)
     if (options?.includeAuthor !== undefined) params.set('includeAuthor', String(options.includeAuthor))
     if (options?.includeBook !== undefined) params.set('includeBook', String(options.includeBook))
-    const encoded = encodeEventType(options?.eventType)
-    if (encoded !== undefined) params.set('eventType', encoded)
+    if (options?.eventType !== undefined) {
+      const encoded = encodeEventType(options.eventType)
+      if (Array.isArray(encoded)) {
+        encoded.forEach((n) => params.append('eventType', String(n)))
+      } else if (encoded !== undefined) {
+        params.set('eventType', String(encoded))
+      }
+    }
     if (options?.downloadId) params.set('downloadId', options.downloadId)
     if (options?.authorId !== undefined) params.set('authorId', String(options.authorId))
     if (options?.bookId !== undefined) params.set('bookId', String(options.bookId))
@@ -70,7 +84,7 @@ export class HistoryResource {
   async getSince(date: string, eventType?: EventTypeInput): Promise<History[]> {
     const params = new URLSearchParams()
     params.set('date', date)
-    const encoded = encodeEventType(eventType)
+    const encoded = encodeEventTypeAsString(eventType)
     if (encoded !== undefined) params.set('eventType', encoded)
     return this.client.get(`/api/v1/history/since?${params.toString()}`)
   }

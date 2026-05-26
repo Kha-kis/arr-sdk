@@ -1,15 +1,11 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { Queue, QueueBulk, QueueStatus, QueuePagingResource, SortDirection } from '../types.js'
+import type { PaginationOptions } from '../../core/types.js'
+import type { Queue, QueueBulk, QueueStatus, QueuePagingResource } from '../types.js'
 
-export interface GetQueueOptions {
-  page?: number
-  pageSize?: number
-  sortKey?: string
-  sortDirection?: SortDirection
+export interface GetQueueOptions extends PaginationOptions {
   includeUnknownArtistItems?: boolean
   includeArtist?: boolean
   includeAlbum?: boolean
-  [key: string]: unknown
 }
 
 export interface GetQueueDetailsOptions {

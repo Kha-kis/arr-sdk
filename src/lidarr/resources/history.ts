@@ -1,5 +1,6 @@
 import type { ClientMethods } from '../../core/resource.js'
-import type { History, HistoryPagingResource, SortDirection, EntityHistoryEventType } from '../types.js'
+import type { PaginationOptions } from '../../core/types.js'
+import type { History, HistoryPagingResource, EntityHistoryEventType } from '../types.js'
 
 // Numeric values pinned to upstream Lidarr enum
 // (src/NzbDrone.Core/History/EntityHistory.cs — EntityHistoryEventType).
@@ -20,25 +21,27 @@ const ENTITY_HISTORY_EVENT_TYPE_VALUES = {
 } as const satisfies Record<EntityHistoryEventType, number>
 
 export type EventTypeInput = EntityHistoryEventType | number
+export type EventTypeFilter = EventTypeInput | EventTypeInput[]
 
-function encodeEventType(value: EventTypeInput | undefined): number | undefined {
+function encodeEventType(value: EventTypeInput): number
+function encodeEventType(value: EventTypeFilter): number | number[]
+function encodeEventType(value: EventTypeFilter | undefined): number | number[] | undefined
+function encodeEventType(value: EventTypeFilter | undefined): number | number[] | undefined {
   if (value === undefined) return undefined
+  if (Array.isArray(value)) {
+    return value.map((v) => (typeof v === 'number' ? v : ENTITY_HISTORY_EVENT_TYPE_VALUES[v]))
+  }
   return typeof value === 'number' ? value : ENTITY_HISTORY_EVENT_TYPE_VALUES[value]
 }
 
-export interface GetHistoryOptions {
-  page?: number
-  pageSize?: number
-  sortKey?: string
-  sortDirection?: SortDirection
+export interface GetHistoryOptions extends PaginationOptions {
   includeArtist?: boolean
   includeAlbum?: boolean
   includeTrack?: boolean
-  eventType?: EventTypeInput
+  eventType?: EventTypeFilter
   downloadId?: string
   artistId?: number
   albumId?: number
-  [key: string]: unknown
 }
 
 function normalize(options: GetHistoryOptions | undefined) {
