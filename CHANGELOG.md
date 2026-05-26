@@ -53,6 +53,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed iCalendar feed endpoints to use `getText()` instead of `get()` for proper text/calendar response handling
 - Fixed `ManualImport` command `importMode` to use capitalized values matching the API (Sonarr: `'Auto' | 'Move' | 'Copy'`, Radarr: `'Move' | 'Copy'`)
+- **History `eventType` filter now works on all Servarr apps.** The SDK previously serialized `eventType` as the OpenAPI-declared string (e.g. `?eventType=grabbed`), but the upstream `[FromQuery]` model binder rejects string values with HTTP 400 (`"The value 'grabbed' is not valid."`). The resource layer now translates `eventType` to the numeric .NET enum value before serialization, matching what the binder accepts. Affects `history.get`, `history.getAll`, `history.getAllArray`, and `history.getSince` on Sonarr, Radarr, Lidarr, Readarr, and Prowlarr, plus `history.getForArtist` (Lidarr). Numeric values are pinned to upstream C# source and account for enum gaps (e.g. Radarr's `MovieHistoryEventType` skips 2 and 5). Fixes [arr-dashboard#472](https://github.com/Kha-kis/arr-dashboard/issues/472).
+
+### Internal
+
+- Added `.github/workflows/regen-openapi.yml` — weekly cron (Mondays 06:00 UTC) and manual dispatch that regenerates `src/*/generated-types.ts` from upstream specs, runs `tsc --noEmit` + tests, and opens a PR if anything diffs. If a tracked enum is renamed upstream, the resource-layer numeric maps fail their `satisfies Record<…, number>` constraint and CI rejects the regeneration — surfacing the rename in the PR review rather than at runtime.
+- `eventType` parameters on history methods are now also typed as `string | number` (was `string` only), letting consumers pass raw numeric enum values for forward-compatibility with new upstream enum members the SDK doesn't yet know about.
 
 ### Breaking Changes
 
