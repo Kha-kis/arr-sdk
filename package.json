@@ -1,6 +1,6 @@
 {
   "name": "arr-sdk",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Unified TypeScript SDK for Sonarr, Radarr, Lidarr, Readarr, and Prowlarr",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -49,6 +49,7 @@
     "test:run": "vitest run",
     "lint": "eslint src",
     "typecheck": "tsc --noEmit",
+    "test:types": "tsc -p tests/types/tsconfig.json",
     "prepublishOnly": "npm run generate && npm run build"
   },
   "devDependencies": {
